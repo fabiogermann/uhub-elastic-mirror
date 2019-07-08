@@ -1,0 +1,43 @@
+    if "/secure/SessionNavigator.jspa" in [request] or "/secure/BonfireGettingStarted.jspa" in [request] or "/secure/GetBonfire.jspa" in [request] or "/secure/CreateSession.jspa" in [request] or "/secure/ViewSession.jspa" in [request] {
+        grok {
+            match => { "request" => "^/secure/GetBonfire.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Capture"
+              "AddOn_Action" => "Get Browser Extension"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/SessionNavigator.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Capture"
+              "AddOn_Action" => "Get Browser Extension"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/BonfireGettingStarted.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Capture"
+              "AddOn_Action" => "Getting Started"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/CreateSession.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Capture"
+              "AddOn_Action" => "Create Session"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/ViewSession.jspa\?testSessionId=%{BASE10NUM:AddOn_Variable}"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Capture"
+              "AddOn_Action" => "View Session"
+            }
+        }
+
+    }

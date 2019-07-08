@@ -1,0 +1,34 @@
+    if "Structure" in [request] {
+        grok {
+            match => { "request" => "^/secure/StructureBoard.jspa(\?s=%{BASE10NUM:AddOn_Variable})?" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Structure"
+              "AddOn_Action" => "View Board"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/CreateStructure!apply.jspa" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Structure"
+              "AddOn_Action" => "Create Board"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/ManageStructure.jspa(\?view=%{WORD:AddOn_Variable})?" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Structure"
+              "AddOn_Action" => "Manage Board"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/ViewStructureShortcuts.jspa" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Structure"
+              "AddOn_Action" => "View Keyboard Shortcuts"
+            }
+        }
+    }

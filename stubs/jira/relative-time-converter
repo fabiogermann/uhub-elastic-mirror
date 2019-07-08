@@ -1,0 +1,10 @@
+    if "/rest/rtc/1.0/service/userSettings" in [request]  {
+        grok {
+            match => { "request" => "^/rest/rtc/1.0/service/userSettings"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Relative Time Converter"
+              "AddOn_Action" => "Update Settings"
+            }
+        }
+    }

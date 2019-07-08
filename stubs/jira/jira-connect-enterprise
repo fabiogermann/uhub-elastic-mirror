@@ -1,0 +1,10 @@
+    if "JCE" in [agent]  {
+        grok {
+            match => { "agent" => "^JCE\%20%{GREEDYDATA:AddOn_Action}"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Connect Enterprise"
+            }
+        }
+
+    }

@@ -1,0 +1,26 @@
+    if "/plugins/servlet/softwareplant-biggantt" in [request]  {
+        grok {
+            match => { "request" => "^/plugins/servlet/softwareplant-biggantt/gantt(program=%{BASE10NUM:AddOn_Variable})?"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Big Gantt"
+              "AddOn_Action" => "View Program"
+            }
+        }
+        grok {
+            match => { "request" => "^/plugins/servlet/softwareplant-biggantt/program/configuration(program=%{BASE10NUM:AddOn_Variable})?"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Big Gantt"
+              "AddOn_Action" => "Configure Program"
+            }
+        }
+        grok {
+            match => { "request" => "^/plugins/servlet/softwareplant-biggantt/manage"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Big Gantt"
+              "AddOn_Action" => "Program Manager"
+            }
+        }
+    }

@@ -1,0 +1,204 @@
+    if "login" in [request] or "Dashboard.jspa" in [request] {
+        # TODO: Needs work
+        grok {
+            match => { "request" => "^/rest/gadget/1.0/login" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "Login"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/Dashboard.jspa(\?selectPageId=%{BASE10NUM:AddOn_Variable})?" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "View Dashboard"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/EditPortalPage!default.jspa\?pageId=%{BASE10NUM:AddOn_Variable}%{GREEDYDATA:drop}" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "Edit Dashboard"
+            }
+        }
+    }
+
+    # Project setup
+    if "/plugins/servlet/project-config/" in [request]  {
+        grok {
+            match => { "request" => "^/plugins/servlet/project-config/%{WORD:projectKey}/roles" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "Project Roles"
+            }
+        }
+        grok {
+            match => { "request" => "^/plugins/servlet/project-config/%{WORD:projectKey}/summary" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "Project Summary"
+            }
+        }
+        grok {
+            match => { "request" => "^/plugins/servlet/project-config/%{WORD:projectKey}/workflows" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "Project Workflows"
+            }
+        }
+        grok {
+            match => { "request" => "^/plugins/servlet/project-config/%{WORD:projectKey}/screens" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "Project Screens"
+            }
+        }
+        grok {
+            match => { "request" => "^/plugins/servlet/project-config/%{WORD:projectKey}/fields" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "Project Fields"
+            }
+        }
+        grok {
+            match => { "request" => "^/plugins/servlet/project-config/%{WORD:projectKey}/priorities" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "Project Priorities"
+            }
+        }
+        grok {
+            match => { "request" => "^/plugins/servlet/project-config/%{WORD:projectKey}/administer-versions" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Software"
+              "AddOn_Action" => "Project Versions"
+            }
+        }
+        grok {
+            match => { "request" => "^/plugins/servlet/project-config/%{WORD:projectKey}/administer-components" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Software"
+              "AddOn_Action" => "Project Components"
+            }
+        }
+    }
+
+    if "browse" in [request] or "projects" in [request] or "issues" in [request] {
+        grok {
+            match => { "request" => "^/(browse|issues)/%{GREEDYDATA:drop}?jql=%{GREEDYDATA:drop}" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "Issue Search"
+            }
+
+        }
+        grok {
+            match => { "request" => "^/browse/%{WORD:projectKey}" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Core"
+              "AddOn_Action" => "View Project"
+            }
+
+        }
+        grok {
+            match => { "request" => "^/browse/%{WORD:projectKey}/queues/custom/%{BASE10NUM:AddOn_Variable}" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Service Desk"
+              "AddOn_Action" => "View Queue"
+            }
+        }
+        grok {
+            match => { "request" => "^/browse/%{WORD:projectKey}/customers" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Service Desk"
+              "AddOn_Action" => "View Customers"
+            }
+        }
+        grok {
+            match => { "request" => "^/browse/%{WORD:projectKey}/reports/%{WORD:AddOn_Variable}%{GREEDYDATA:drop}" }
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Service Desk"
+              "AddOn_Action" => "View Report"
+            }
+        }
+        grok {
+            match => { "request" => "^/browse/%{WORD:projectKey}" }
+            break_on_match => false
+        }
+        grok {
+            match => { "request" => "^/projects/%{WORD:projectKey}" }
+            break_on_match => false
+        }
+
+    }
+
+    if "/secure/ViewProfile.jspa" in [request] or "/secure/UpdateUserPreferences" in [request] {
+        grok {
+            match => { "request" => "^/secure/ViewProfile.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "User"
+              "AddOn_Action" => "View Profile"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/UpdateUserPreferences!default.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "User"
+              "AddOn_Action" => "Update User Preferences"
+            }
+        }
+    }
+
+    if "/secure/RapidBoard.jspa" in [request] or "/secure/ManageRapidViews.jspa" in [request] or "/rest/greenhopper/1.0/rapidview/create/presets" in [request] {
+        grok {
+            match => { "request" => "^/secure/RapidBoard.jspa\?rapidView=%{BASE10NUM:AddOn_Variable}"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Software"
+              "AddOn_Action" => "View Board"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/RapidBoard.jspa\?rapidView=%{BASE10NUM:AddOn_Variable}&tab=%{WORD:AddOn_Action_Sub}"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Software"
+              "AddOn_Action" => "Configure Board - %{AddOn_Action_Sub}"
+            }
+            remove_field => [ "AddOn_Action_Sub" ]
+        }
+        grok {
+            match => { "request" => "^/secure/ManageRapidViews.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Software"
+              "AddOn_Action" => "View All Boards"
+            }
+        }
+        grok {
+            match => { "request" => "^/rest/greenhopper/1.0/rapidview/create/presets"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Jira Software"
+              "AddOn_Action" => "Create Board"
+            }
+        }
+    }

@@ -1,0 +1,10 @@
+    if "/secure/Tests.jspa" in [request] {
+        # The actions in TM4J are all after a # in the URL so we cannot access it from the web server logs, so we can't get more granular for now
+        grok {
+            match => { "agent" => "^/secure/Tests.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "TM4J"
+            }
+        }
+    }

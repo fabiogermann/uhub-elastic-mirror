@@ -1,0 +1,42 @@
+    if "/secure/OutOfOfficeManager.jspa" in [request]  {
+        grok {
+            match => { "request" => "^/secure/OutOfOfficeManager.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "OOO Assistant"
+              "AddOn_Action" => "View Rules"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/OutOfOfficeManager!add.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "OOO Assistant"
+              "AddOn_Action" => "Add Rule (start)"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/OutOfOfficeManager!save.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "OOO Assistant"
+              "AddOn_Action" => "Add Rule (save)"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/OutOfOfficeManager!edit.jspa(ruleId=%{BASE10NUM:AddOn_Variable})?"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "OOO Assistant"
+              "AddOn_Action" => "Edit Rule"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/OutOfOfficeManager!delete.jspa(ruleId=%{BASE10NUM:AddOn_Variable})?"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "OOO Assistant"
+              "AddOn_Action" => "Delete Rule"
+            }
+        }
+    }

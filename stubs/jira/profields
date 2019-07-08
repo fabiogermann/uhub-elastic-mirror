@@ -1,0 +1,42 @@
+    if "/secure/ProfieldsProjectNavigator" in [request] or "selectedItem=com.deiser.jira.profields:profields_project_fields" in [request] or "/rest/profields/api/2.0" in [request] {
+        grok {
+             match => { "request" => "^/secure/ProfieldsProjectNavigator!currentSearch.jspa"}
+             break_on_match => false
+             add_field => {
+               "AddOn" => "Profields"
+               "AddOn_Action" => "Current Search"
+             }
+        }
+        grok {
+            match => { "request" => "^/projects/%{BASE10NUM:AddOn_Variable}\?selectedItem=com.deiser.jira.profields:profields_project_fields"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Profields"
+              "AddOn_Action" => "Configure Project"
+            }
+        }
+        grok {
+            match => { "request" => "^/rest/profields/api/2.0/layouts$"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Profields"
+              "AddOn_Action" => "Associate Layout (start)"
+            }
+        }
+        grok {
+            match => { "request" => "^/rest/profields/api/2.0/layouts/1/projects/%{BASE10NUM:AddOn_Variable}"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Profields"
+              "AddOn_Action" => "Associate Layout (save)"
+            }
+        }
+        grok {
+            match => { "request" => "^/rest/profields/api/2.0/historical/projects/%{BASE10NUM:AddOn_Variable}/fields"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Profields"
+              "AddOn_Action" => "View History"
+            }
+        }
+    }

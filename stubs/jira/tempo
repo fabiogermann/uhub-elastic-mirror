@@ -1,0 +1,83 @@
+    if "Tempo" in [request] or "tempo" in [request] or "/secure/Overview.jspa" in [request] {
+        grok {
+            match => { "request" => "^/secure/TempoUserBoard!timesheet.jspa(\?userId=%{GREEDYDATA:AddOn_Variable}\&filterIds=-1001)?"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Tempo"
+              "AddOn_Action" => "User Time Sheet"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/Tempo.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Tempo"
+              "AddOn_Action" => "Unknown"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/TempoAddHours\!default.jspa\?id="}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Tempo"
+              "AddOn_Action" => "Log Time"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/TempoAddHours\!default.jspa\?tracker="}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Tempo"
+              "AddOn_Action" => "Time Tracker"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/TempoUserView.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Tempo"
+              "AddOn_Action" => "View Calendar"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/Overview.jspa"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Tempo"
+              "AddOn_Action" => "Planner Overview"
+            }
+        }
+        grok {
+            match => { "request" => "(^/secure/TeamPlanning.jspa\?teamId=%{BASE10NUM:AddOn_Variable})?(^/rest/tempo-teams/2/teammember/team/%{BASE10NUM:AddOn_Variable})?/members\?"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Tempo"
+              "AddOn_Action" => "Team Planning"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/TempoTeamBoard!timesheet.jspa\?(team=%{BASE10NUM:AddOn_Variable})?(v\=1\&team\=%{BASE10NUM:AddOn_Variable})?"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Tempo"
+              "AddOn_Action" => "Time Tracking View"
+            }
+        }
+        grok {
+            match => { "request" => "^/secure/TempoTeam!default.jspa\?teamId=%{BASE10NUM}(&section=%{WORD:AddOn_Variable})?(\&tab=%{WORD:AddOn_SubAction})?"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Tempo"
+              "AddOn_Action" => "Team Tabs and Configurations - %{AddOn_SubAction}"
+            }
+            remove_field => [ "AddOn_SubAction" ]
+        }
+        grok {
+            match => { "request" => "^/secure/TempoTeamUtilization.jspa\?id=%{BASE10NUM:AddOn_Variable}"}
+            break_on_match => false
+            add_field => {
+              "AddOn" => "Tempo"
+              "AddOn_Action" => "Team Utilization"
+            }
+        }
+    }

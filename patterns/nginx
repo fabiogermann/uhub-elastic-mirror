@@ -1,0 +1,7 @@
+NGUSERNAME [a-zA-Z0-9\.\@\-\+_%]+
+NGUSER %{NGUSERNAME}
+EMAIL %{NGUSERNAME}
+IPORHOSTORUNDERSCORE (?:%{HOSTNAME}|%{IP}|_)
+NGINXACCESS %{IPORHOST:clientip} - %{NGUSER:username} \[%{HTTPDATE:timestamp}\]%{SPACE}"%{WORD:verb} %{URIPATHPARAM:request} HTTP/%{NUMBER:httpversion}" %{NUMBER:response} (?:%{NUMBER:bytes}|-) (?:"(?:%{URI:referrer}|-)"|%{QS:referrer}) %{QS:agent}
+NGINXACCESSBACKEND %{NGINXACCESS}( \[%{BASE16FLOAT:responseTimeNum}\])?( \[%{BASE16FLOAT:upstreamResponseTimeNum}\])?
+NGINXERROR ^(?<timestamp>%{YEAR}[./-]%{MONTHNUM}[./-]%{MONTHDAY}[- ]%{TIME}) \[%{LOGLEVEL:severity}\] %{POSINT:pid}#%{NUMBER}: %{GREEDYDATA:errormessage}(?:, client: (?<client>%{IP}|%{HOSTNAME}))(?:, server: %{IPORHOSTORUNDERSCORE:server})(?:,w request: %{QS:request})?(?:, upstream: "%{URI:upstream}")?(?:, host: %{QS:host})?(?:, referrer: "%{URI:referrer}")?$

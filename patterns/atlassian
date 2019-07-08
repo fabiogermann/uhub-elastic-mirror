@@ -1,0 +1,14 @@
+GUID (?:[A-Za-z0-9-]+)
+APPNAME [a-zA-Z0-9\.\@\-\+_%\:]+
+# Crowd
+ATLASSIANLOG4J1 ^%{TIMESTAMP_ISO8601:timestamp} %{APPNAME:applicationModule} %{LOGLEVEL:severity}\s(%{APPNAME:applicationName}%{SPACE})?\[%{APPNAME:service}\]\s%{GREEDYDATA:syslog_message}
+# Jira, FeCru
+ATLASSIANLOG4J2 ^%{TIMESTAMP_ISO8601:timestamp} (%{APPNAME:applicationModule}%{SPACE})?%{LOGLEVEL:severity}%{SPACE}%{GREEDYDATA:syslog_message}
+# Confluence, Bamboo, Bitbucket
+ATLASSIANLOG4J3 ^%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:severity}%{SPACE}(\[%{APPNAME:applicationModule}\]%{SPACE})?\[%{APPNAME:service}\]%{SPACE}%{GREEDYDATA:syslog_message}
+#debugging
+ATLASSIANGREEDY %{GREEDYDATA:syslog_message}
+#json
+JSON \{.*\}
+# Bitbucket Audit Log
+BITBUCKETAUDIT (\ -)?(%{HOSTNAME:clientip}(\,%{HOSTNAME},%{HOSTNAME})?)? \| %{WORD:event} \| %{GREEDYDATA:email} \| %{BASE10NUM:epoch_timestamp} \| %{GREEDYDATA:username} \| %{JSON:content}
